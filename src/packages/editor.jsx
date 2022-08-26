@@ -23,7 +23,7 @@ export default defineComponent({
       commandArray: [],
       destroyArray: []
     }
-    
+
     // 设置计算属性，用来改变和渲染画布的大小
     const containerStyles = computed(() => ({
       width: data.value.container.width + 'px',
@@ -65,6 +65,16 @@ export default defineComponent({
       </div>
       <div class="editor-top">编辑区</div>
       <div class="editor-right">属性区</div>
+      <div className="editor-container">
+        {
+          (data.value.blocks.map((block, index) => (
+            <EditorBlock
+              block={block}
+              data={data}
+            ></EditorBlock>
+          )))
+        }
+      </div>
     </div>
   }
 })
