@@ -10,7 +10,7 @@ provide("config", config);
 
 <template>
   <div class="app">
-    <Editor :data="state"></Editor>
+    <Editor v-model="state"></Editor>
   </div>
 </template>
 
