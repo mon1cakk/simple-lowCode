@@ -3,6 +3,7 @@ import './editor.scss'
 import {useMenuDragger} from "@/packages/useMenuDragger";
 import {useCommand} from "@/packages/useCommand";
 import deepcopy from "deepcopy";
+import EditorBlock from './editor-block'
 import GridTemplate from "../utils/grid-template.vue"
 import {useFocus} from "@/packages/useFocus";
  
@@ -14,7 +15,7 @@ export default defineComponent({
     GridTemplate,
   },
   emits: ['update:modelValue'],
-  setup(props) {
+  setup(props, ctx) {
     // 设置计算属性，以便于实现数据的双向绑定
     const data = computed({
       get() {
@@ -51,18 +52,19 @@ export default defineComponent({
       height: data.value.container.height + 'px',
     }))
 
+    const config = inject('config')
+
+    // 实现菜单拖拽功能
+    const containerRef = ref(null)
+    const { dragstart, dragend } = useMenuDragger(containerRef, data);
+
     // 实现获取焦点
     let {blockMousedown, focusData, containerMousedown, lastSelectBlock} = useFocus(data, copyContent, (e) => {
       mousedown(e)
       // console.log(JSON.stringify(attrs_style.value.attribute))
       // console.log(JSON.stringify(attrs_style.value.block))
     });
-
-    // 实现菜单拖拽功能
-    const containerRef = ref(null)
-    const { dragstart, dragend } = useMenuDragger(containerRef, data);
     
-    const config = inject('config')
     const { commands } = useCommand(data, state);
     const buttons = [
       { label: '撤销', handler: () => commands.undo() },
